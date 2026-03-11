@@ -1,0 +1,38 @@
+# evcc meter configuration for Marstek Venus E V2 (via marstek-api proxy)
+#
+# In evcc, a battery is configured as a meter with type: custom.
+# Add this via the evcc UI → Meters → Add → Custom → paste into the YAML editor.
+# Or add it under the meters: key in your evcc.yaml.
+#
+# Prerequisites:
+#   1. Enable the Open API in the Marstek app on each battery
+#   2. Run the marstek-api proxy on the same machine as evcc:
+#      sudo systemctl start marstek-api
+
+meters:
+  - name: Marstek Venus E V2
+    type: custom
+
+    # Battery power in Watts — positive = charging, negative = discharging
+    power:
+      source: http
+      uri: http://localhost:7071/api/power
+      jq: .power
+
+    # State of charge in %
+    soc:
+      source: http
+      uri: http://localhost:7071/api/soc
+      jq: .soc
+
+    # Combined capacity in kWh (e.g. 2 × 5.12 kWh = 10.24 kWh)
+    capacity: 10.24
+
+    # Battery mode control — evcc sends 1=normal, 2=hold, 3=charge
+    batterymode:
+      source: http
+      uri: http://localhost:7071/api/batterymode
+      method: POST
+      body: '{"mode": "{{.batteryMode}}"}'
+      headers:
+        - Content-Type: application/json
