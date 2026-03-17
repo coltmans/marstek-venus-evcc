@@ -1,3 +1,5 @@
+# On hold, since the batteries lost the connection to the energy meter
+
 # marstek-venus-evcc
 
 > **Early release** — working but lightly tested. Feedback and contributions welcome.
